@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, CheckCircle2, X, ExternalLink, Sparkles, Building2, ShieldCheck } from 'lucide-react';
 import { BentoCard } from './ui/BentoCard';
+import { useCMS } from '../context/CMSContext';
+import { Edit3 } from 'lucide-react';
 
 interface Project {
   id: string;
   client: string;
-  category: 'Enterprise Tech' | 'Healthcare' | 'Travel & E-Commerce' | 'B2B Enterprise';
+  category: any;
   timeline: string;
   headline: string;
   summary: string;
@@ -13,7 +15,7 @@ interface Project {
   deliverables: string[];
 }
 
-const PROJECTS: Project[] = [
+const DEFAULT_PROJECTS: Project[] = [
   {
     id: 'microsoft',
     client: 'Microsoft',
@@ -93,26 +95,38 @@ interface FeaturedWorkProps {
 }
 
 export const FeaturedWork: React.FC<FeaturedWorkProps> = ({ onOpenContact }) => {
+  const { siteContent, isAuthenticated, openEditorToTab } = useCMS();
+  const projects = siteContent.projects || DEFAULT_PROJECTS;
+
   const [activeFilter, setActiveFilter] = useState<string>('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filters = ['All', 'Enterprise Tech', 'Healthcare', 'Travel & E-Commerce', 'B2B Enterprise'];
 
   const filteredProjects = activeFilter === 'All'
-    ? PROJECTS
-    : PROJECTS.filter(p => p.category === activeFilter);
+    ? projects
+    : projects.filter(p => p.category === activeFilter);
 
   return (
-    <section id="work" className="py-24 sm:py-28 border-t border-slate-200/90 dark:border-white/10 bg-slate-100/60 dark:bg-[#0D1017] relative transition-colors">
+    <section id="work" className="py-24 sm:py-28 border-t border-slate-200/90 dark:border-white/10 bg-slate-100/60 dark:bg-[#0D1017] relative transition-colors group/work">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 relative">
           <div className="max-w-3xl text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#11151D] border border-slate-200 dark:border-white/10 text-xs font-mono font-medium text-lime-600 dark:text-[#C6FF4D] mb-3 shadow-xs">
               <span>02 // VERIFIED CLIENT TRANSFORMATIONS</span>
               <span aria-hidden="true" className="text-slate-300 dark:text-white/20">·</span>
               <span>110+ GLOBAL PARTNERSHIPS</span>
             </div>
+            {isAuthenticated && (
+              <button
+                onClick={() => openEditorToTab('projects')}
+                className="ml-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border border-lime-500/30 text-[11px] font-mono font-bold hover:bg-lime-500/30 transition-all cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit Case Studies</span>
+              </button>
+            )}
             <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-[#F5F7FA] leading-[1.12]">
               Case Studies in Velocity & Scale
             </h2>

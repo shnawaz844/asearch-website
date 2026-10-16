@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { ALL_SERVICES } from '../data/siteData';
 import { ServiceItem } from '../types';
 import { BentoCard } from './ui/BentoCard';
-import { ArrowUpRight, CheckCircle2, X, Sparkles, TrendingUp, Search, Share2, Palette, Code2, Workflow, DollarSign, BarChart3, Layers, Compass } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, X, Sparkles, TrendingUp, Search, Share2, Palette, Code2, Workflow, DollarSign, BarChart3, Layers, Compass, Edit3 } from 'lucide-react';
+import { useCMS } from '../context/CMSContext';
 
 interface ServicesBentoProps {
   onOpenContact: (serviceTitle?: string) => void;
@@ -24,6 +25,9 @@ const SERVICE_ICONS: Record<string, React.ElementType> = {
 };
 
 export const ServicesBento: React.FC<ServicesBentoProps> = ({ onOpenContact }) => {
+  const { siteContent, isAuthenticated, openEditorToTab } = useCMS();
+  const services = siteContent.services || ALL_SERVICES;
+
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('All Capabilities');
 
@@ -34,24 +38,33 @@ export const ServicesBento: React.FC<ServicesBentoProps> = ({ onOpenContact }) =
   ];
 
   const displayedServices = activeCategory === 'All Capabilities'
-    ? ALL_SERVICES
-    : ALL_SERVICES.filter(s => s.category === activeCategory);
+    ? services
+    : services.filter(s => s.category === activeCategory);
 
   return (
-    <section id="services" className="py-24 sm:py-28 border-t border-slate-200/90 dark:border-white/10 bg-slate-50/70 dark:bg-[#07080B] relative overflow-hidden transition-colors">
+    <section id="services" className="py-24 sm:py-28 border-t border-slate-200/90 dark:border-white/10 bg-slate-50/70 dark:bg-[#07080B] relative overflow-hidden transition-colors group/services">
       {/* Ambient background glow */}
       <div className="pointer-events-none absolute -top-40 right-0 w-96 h-96 bg-purple-500/10 dark:bg-[#8B5CF6]/10 blur-[130px] rounded-full" />
       <div className="pointer-events-none absolute -bottom-40 left-0 w-96 h-96 bg-lime-500/10 dark:bg-[#C6FF4D]/8 blur-[130px] rounded-full" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 relative">
           <div className="max-w-3xl text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#11151D] border border-slate-200 dark:border-white/10 text-xs font-mono font-medium text-lime-600 dark:text-[#C6FF4D] mb-3 shadow-xs">
               <span>01 // OFFICIAL SERVICES & CAPABILITIES</span>
               <span aria-hidden="true" className="text-slate-300 dark:text-white/20">·</span>
               <span>12 CORE GROWTH DISCIPLINES</span>
             </div>
+            {isAuthenticated && (
+              <button
+                onClick={() => openEditorToTab('services')}
+                className="ml-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border border-lime-500/30 text-[11px] font-mono font-bold hover:bg-lime-500/30 transition-all cursor-pointer"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit 12 Services</span>
+              </button>
+            )}
             <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-[#F5F7FA] leading-[1.12]">
               Engineering Market Dominance
             </h2>

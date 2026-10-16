@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { VERIFIED_CLIENTS } from '../../data/siteData';
+import { useCMS } from '../../context/CMSContext';
+import { Edit3 } from 'lucide-react';
 
 interface MarqueeProps {
   className?: string;
@@ -20,16 +21,30 @@ const CAPABILITIES = [
 ];
 
 export const Marquee: React.FC<MarqueeProps> = ({ className }) => {
+  const { siteContent, isAuthenticated, openEditorToTab } = useCMS();
+  const clients = siteContent.clients || [];
+
   return (
-    <div className={cn('relative w-full overflow-hidden border-y border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-[#0D1017]/80 backdrop-blur-md select-none transition-colors', className)}>
+    <div className={cn('relative w-full overflow-hidden border-y border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-[#0D1017]/80 backdrop-blur-md select-none transition-colors group/marquee', className)}>
       {/* Side gradient fade masks */}
       <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-r from-slate-50 dark:from-[#07080B] to-transparent z-10" />
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-l from-slate-50 dark:from-[#07080B] to-transparent z-10" />
 
+      {/* Client Quick Edit Badge */}
+      {isAuthenticated && (
+        <button
+          onClick={() => openEditorToTab('clients')}
+          className="absolute top-2 right-4 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border border-lime-500/30 text-[10px] font-mono font-bold hover:bg-lime-500/30 transition-all cursor-pointer shadow-md"
+        >
+          <Edit3 className="w-3 h-3" />
+          <span>Edit Clients</span>
+        </button>
+      )}
+
       {/* Row 1: Official Client Brand Strip */}
       <div className="py-3.5 border-b border-slate-200/60 dark:border-white/5 flex items-center overflow-hidden">
         <div className="animate-marquee flex items-center gap-8 sm:gap-12 whitespace-nowrap">
-          {VERIFIED_CLIENTS.concat(VERIFIED_CLIENTS).map((client, idx) => (
+          {clients.concat(clients).map((client, idx) => (
             <div key={idx} className="flex items-center gap-8 sm:gap-12">
               <span className="text-xs sm:text-sm font-mono font-extrabold tracking-[0.22em] uppercase text-slate-800 dark:text-[#F5F7FA] hover:text-lime-600 dark:hover:text-[#C6FF4D] transition-colors cursor-default flex items-center gap-2">
                 <span>{client.name}</span>

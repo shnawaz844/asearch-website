@@ -5,6 +5,9 @@ import { MagneticButton } from './ui/MagneticButton';
 import { cn } from '../lib/utils';
 import { ALL_SERVICES } from '../data/siteData';
 
+import { useCMS } from '../context/CMSContext';
+import { Lock, Edit3 } from 'lucide-react';
+
 interface NavbarProps {
   theme: ThemeMode;
   onToggleTheme: () => void;
@@ -12,6 +15,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenContact }) => {
+  const { siteContent, isAuthenticated, setIsLoginModalOpen, setIsEditorDrawerOpen } = useCMS();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
@@ -39,8 +43,8 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
     }, 180);
   };
 
-  const marketingServices = ALL_SERVICES.filter(s => s.category === 'Digital Marketing & Strategy');
-  const techServices = ALL_SERVICES.filter(s => s.category === 'Technology & Automation Solutions');
+  const marketingServices = siteContent.services.filter(s => s.category === 'Digital Marketing & Strategy');
+  const techServices = siteContent.services.filter(s => s.category === 'Technology & Automation Solutions');
 
   const navLinks = [
     { label: 'Services', href: '#services', isDropdown: true },
@@ -69,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
         {/* Brand Logo (Zone 1) */}
         <a href="#" className="flex items-center gap-2 group whitespace-nowrap shrink-0" aria-label="ASearch Online Home">
           <img
-            src="https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"
+            src={siteContent.branding.logoUrl}
             alt="ASearch Online"
             className="h-7 sm:h-9 w-auto max-w-[145px] sm:max-w-[210px] object-contain transition-transform duration-300 group-hover:scale-105"
             onError={(e) => {
@@ -250,6 +254,26 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             ) : (
               <Moon className="w-4 h-4 text-indigo-600 dark:text-[#C6FF4D]" />
             )}
+          </button>
+
+          {/* Client Portal / CMS Trigger */}
+          <button
+            onClick={() => {
+              if (isAuthenticated) {
+                setIsEditorDrawerOpen(true);
+              } else {
+                setIsLoginModalOpen(true);
+              }
+            }}
+            className={`p-2.5 rounded-xl transition-all cursor-pointer border ${
+              isAuthenticated
+                ? 'bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border-lime-500/40 hover:bg-lime-500/30'
+                : 'text-slate-600 dark:text-[#9CA3AF] hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#11151D]/80 border-slate-200 dark:border-white/10'
+            }`}
+            title={isAuthenticated ? 'Open CMS Live Editor' : 'Client Portal Login'}
+            aria-label="Client Portal Login"
+          >
+            {isAuthenticated ? <Edit3 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
           </button>
 
           {/* Master Prompt CTA: "Let's Talk" */}

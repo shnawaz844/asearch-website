@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeMode } from './types';
+import { CMSProvider } from './context/CMSContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Marquee } from './components/ui/Marquee';
@@ -16,8 +17,12 @@ import { AboutUs } from './components/AboutUs';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { DiscoveryModal } from './components/DiscoveryModal';
+import { CMSAdminBar } from './components/cms/CMSAdminBar';
+import { CMSEditorDrawer } from './components/cms/CMSEditorDrawer';
+import { ClientLoginModal } from './components/cms/ClientLoginModal';
+import { GitHubDeployModal } from './components/cms/GitHubDeployModal';
 
-export default function App() {
+function AppContent() {
   // Always default to 'dark' theme as requested
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
@@ -106,28 +111,48 @@ export default function App() {
           onApplyProjection={(summary) => handleOpenDiscovery(`ROI Simulator Projection: ${summary}`)}
         />
 
-        {/* 11. Architecture Diagnostic Scanner (Passive 6-Pillar Audit) */}
+        {/* 10. Architecture Diagnostic Scanner (Passive 6-Pillar Audit) */}
         <InteractiveAudit onRequestAuditReview={handleAuditReview} />
 
-        {/* 12. Modern Growth Tech Stack Ecosystem */}
+        {/* 11. Modern Growth Tech Stack Ecosystem */}
         <TechEcosystem />
 
-        {/* 13. About ASearch Online Media Private Limited */}
+        {/* 12. About ASearch Online Media Private Limited */}
         <AboutUs onOpenStrategyCall={() => handleOpenDiscovery('About Us Inquiry')} />
 
-        {/* 14. Direct Contact Form & Interactive FAQ Accordion */}
+        {/* 13. Direct Contact Form & Interactive FAQ Accordion */}
         <ContactSection />
       </main>
 
-      {/* 15. World-Class Comprehensive Footer */}
+      {/* 14. World-Class Comprehensive Footer */}
       <Footer onOpenStrategyCall={() => handleOpenDiscovery('Footer CTA')} />
 
-      {/* 16. Multi-Step Strategic Consultation Modal */}
+      {/* 15. Multi-Step Strategic Consultation Modal */}
       <DiscoveryModal
         isOpen={isDiscoveryOpen}
         onClose={() => setIsDiscoveryOpen(false)}
         prefilledNotes={discoveryNotes}
       />
+
+      {/* CMS Administration Bar (Floating, shown when logged in) */}
+      <CMSAdminBar />
+
+      {/* CMS Full Section & Image Editor Drawer */}
+      <CMSEditorDrawer />
+
+      {/* Client & Admin Portal Authentication Modal */}
+      <ClientLoginModal />
+
+      {/* GitHub Commit & Vercel Live Deploy Modal */}
+      <GitHubDeployModal />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <CMSProvider>
+      <AppContent />
+    </CMSProvider>
   );
 }
