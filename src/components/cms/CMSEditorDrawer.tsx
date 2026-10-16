@@ -33,7 +33,8 @@ export const CMSEditorDrawer: React.FC = () => {
     updateSection,
     setIsGitHubModalOpen,
     activeEditorTab,
-    setActiveEditorTab
+    setActiveEditorTab,
+    logout
   } = useCMS();
 
   const [savedNotification, setSavedNotification] = useState(false);
@@ -195,10 +196,9 @@ export const CMSEditorDrawer: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                setIsEditorDrawerOpen(false);
-                setIsEditMode(false);
+                logout();
               }}
-              title="Close editor and view the live website"
+              title="Close editor and switch to Website Mode"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-white/20 text-xs font-bold transition-all cursor-pointer whitespace-nowrap"
             >
               <Eye className="w-3.5 h-3.5" />

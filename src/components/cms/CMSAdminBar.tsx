@@ -87,11 +87,10 @@ export const CMSAdminBar: React.FC = () => {
           </button>
           <button
             onClick={() => {
-              setIsEditMode(false);
-              setIsEditorDrawerOpen(false);
+              logout();
             }}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
-            title="Switch back to Website Mode"
+            title="Switch back to Website Mode (Log out)"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Website Mode</span>

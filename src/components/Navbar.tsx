@@ -15,7 +15,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenContact }) => {
-  const { siteContent, isAuthenticated, isEditMode, setIsEditMode, setIsLoginModalOpen, setIsEditorDrawerOpen } = useCMS();
+  const { siteContent, isAuthenticated, isEditMode, setIsEditMode, setIsLoginModalOpen, setIsEditorDrawerOpen, logout } = useCMS();
   const [scrolled, setScrolled] = useState(false);
   const [logoShrunk, setLogoShrunk] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -90,7 +90,11 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             )}
           >
             <img
+<<<<<<< Updated upstream
               src={siteContent.branding.logoUrl || "https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"}
+=======
+              src="https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"
+>>>>>>> Stashed changes
               alt="ASearch Online"
               className="h-9 sm:h-11 w-auto max-w-[180px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-105"
               onError={(e) => {
@@ -274,63 +278,47 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             )}
           </button>
 
-          {/* Client Portal / Mode Switcher (Edit Mode vs Website Mode) */}
+          {/* Client Portal Mode Button: "Edit Mode" (prompts login) vs "Website Mode" (logs out) */}
           <button
             onClick={() => {
               if (isAuthenticated) {
-                if (isEditMode) {
-                  // Switch back to clean Website Mode
-                  setIsEditMode(false);
-                  setIsEditorDrawerOpen(false);
-                } else {
-                  // Switch to Edit Mode & open drawer
-                  setIsEditMode(true);
-                  setIsEditorDrawerOpen(true);
-                }
+                // Clicking Website Mode logs out and returns to clean website
+                logout();
               } else {
+                // Clicking Edit Mode prompts for login credentials
                 setIsLoginModalOpen(true);
               }
             }}
             className={`p-2 sm:px-3 sm:py-2 rounded-xl transition-all cursor-pointer border flex items-center gap-1.5 ${
               isAuthenticated
-                ? isEditMode
-                  ? 'bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border-lime-500/40 hover:bg-lime-500/30 shadow-xs'
-                  : 'bg-slate-100 dark:bg-[#11151D]/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:text-slate-950 dark:hover:text-white'
-                : 'text-slate-600 dark:text-[#9CA3AF] hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#11151D]/80 border-slate-200 dark:border-white/10'
+                ? 'bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border-lime-500/40 hover:bg-lime-500/30 shadow-xs'
+                : 'bg-slate-100 dark:bg-[#11151D]/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:text-slate-950 dark:hover:text-white'
             }`}
             title={
               isAuthenticated
-                ? isEditMode
-                  ? 'Switch to Website Mode (Clean Preview)'
-                  : 'Switch to Edit Mode'
-                : 'Client Portal Login'
+                ? 'Switch to Website Mode (Log out of Edit Mode)'
+                : 'Enter Edit Mode (Requires Login)'
             }
             aria-label={
               isAuthenticated
-                ? isEditMode
-                  ? 'Switch to Website Mode'
-                  : 'Switch to Edit Mode'
-                : 'Client Portal Login'
+                ? 'Switch to Website Mode'
+                : 'Enter Edit Mode'
             }
           >
             {isAuthenticated ? (
-              isEditMode ? (
-                <>
-                  <Eye className="w-4 h-4 text-lime-600 dark:text-[#C6FF4D]" />
-                  <span className="hidden md:inline text-xs font-mono font-bold text-lime-600 dark:text-[#C6FF4D]">
-                    Edit Mode
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Edit3 className="w-4 h-4" />
-                  <span className="hidden md:inline text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
-                    Website Mode
-                  </span>
-                </>
-              )
+              <>
+                <Eye className="w-4 h-4 text-lime-600 dark:text-[#C6FF4D]" />
+                <span className="text-xs font-mono font-bold text-lime-600 dark:text-[#C6FF4D]">
+                  Website Mode
+                </span>
+              </>
             ) : (
-              <Lock className="w-4 h-4" />
+              <>
+                <Edit3 className="w-4 h-4" />
+                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                  Edit Mode
+                </span>
+              </>
             )}
           </button>
 
@@ -431,10 +419,17 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
               Google Certified Partner • 14+ Years in Business
             </div>
             <MagneticButton
+<<<<<<< Updated upstream
               href="mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
+=======
+              onClick={() => {
+                setMobileMenuOpen(false);
+                window.location.href = 'mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online';
+              }}
+>>>>>>> Stashed changes
               variant="primary"
               className="w-full text-xs uppercase tracking-wider py-3"
             >
