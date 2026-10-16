@@ -70,7 +70,7 @@ export const VERIFIED_CLIENTS: VerifiedClient[] = [
     "badge": "eCommerce Scaling"
   },
   {
-    "name": "Apes",
+    "name": "Apec",
     "category": "Corporate Services",
     "badge": "Industrial Solutions"
   },
