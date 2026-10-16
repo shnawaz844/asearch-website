@@ -59,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ theme, onOpenContact, onExploreWork 
               {/* Master Headline */}
               <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] sm:leading-[0.98] text-balance">
                 <span className="block text-slate-900 dark:text-[#F5F7FA]">{hero.headlineLine1}</span>
-                <span className="block mt-1 bg-clip-text text-transparent bg-gradient-to-r from-lime-600 via-slate-900 to-indigo-600 dark:from-[#C6FF4D] dark:via-[#F5F7FA] dark:to-[#C6FF4D] animate-shimmer">
+                <span className="block mt-1 bg-clip-text text-transparent bg-gradient-to-r from-lime-600 via-emerald-600 to-indigo-600 dark:from-[#C6FF4D] dark:via-[#F5F7FA] dark:to-[#C6FF4D] animate-shimmer">
                   {hero.headlineLine2}
                 </span>
               </h1>

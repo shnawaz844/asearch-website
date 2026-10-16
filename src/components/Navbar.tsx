@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 import { ALL_SERVICES } from '../data/siteData';
 
 import { useCMS } from '../context/CMSContext';
-import { Lock, Edit3, Eye } from 'lucide-react';
+import { Lock, Unlock, Edit3, Eye } from 'lucide-react';
 
 interface NavbarProps {
   theme: ThemeMode;
@@ -274,47 +274,38 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             )}
           </button>
 
-          {/* Client Portal Mode Button: "Edit Mode" (prompts login) vs "Website Mode" (logs out) */}
+          {/* Client Portal Mode Toggle Button: Lock icon (prompts login) vs Unlock icon (logs out) */}
           <button
             onClick={() => {
               if (isAuthenticated) {
-                // Clicking Website Mode logs out and returns to clean website
+                // Clicking when authenticated logs out and returns to clean website
                 logout();
               } else {
-                // Clicking Edit Mode prompts for login credentials
+                // Clicking when locked prompts for login credentials
                 setIsLoginModalOpen(true);
               }
             }}
-            className={`p-2 sm:px-3 sm:py-2 rounded-xl transition-all cursor-pointer border flex items-center gap-1.5 ${
+            className={cn(
+              "p-2.5 rounded-xl transition-all cursor-pointer border flex items-center justify-center",
               isAuthenticated
-                ? 'bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border-lime-500/40 hover:bg-lime-500/30 shadow-xs'
-                : 'bg-slate-100 dark:bg-[#11151D]/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:text-slate-950 dark:hover:text-white'
-            }`}
+                ? "bg-lime-500/25 dark:bg-[#C6FF4D]/20 border-lime-500/50 dark:border-[#C6FF4D]/50 text-lime-700 dark:text-[#C6FF4D] shadow-xs hover:bg-lime-500/35"
+                : "bg-lime-500/15 dark:bg-[#C6FF4D]/10 border-lime-600/30 dark:border-[#C6FF4D]/30 text-lime-700 dark:text-[#C6FF4D] hover:bg-lime-500/25"
+            )}
             title={
               isAuthenticated
-                ? 'Switch to Website Mode (Log out of Edit Mode)'
-                : 'Enter Edit Mode (Requires Login)'
+                ? "Website Mode (Click to log out of Edit Mode)"
+                : "Edit Mode (Click to log in)"
             }
             aria-label={
               isAuthenticated
-                ? 'Switch to Website Mode'
-                : 'Enter Edit Mode'
+                ? "Switch to Website Mode"
+                : "Enter Edit Mode"
             }
           >
             {isAuthenticated ? (
-              <>
-                <Eye className="w-4 h-4 text-lime-600 dark:text-[#C6FF4D]" />
-                <span className="text-xs font-mono font-bold text-lime-600 dark:text-[#C6FF4D]">
-                  Website Mode
-                </span>
-              </>
+              <Unlock className="w-4 h-4 text-lime-700 dark:text-[#C6FF4D]" strokeWidth={2.4} />
             ) : (
-              <>
-                <Edit3 className="w-4 h-4" />
-                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
-                  Edit Mode
-                </span>
-              </>
+              <Lock className="w-4 h-4 text-lime-700 dark:text-[#C6FF4D]" strokeWidth={2.4} />
             )}
           </button>
 

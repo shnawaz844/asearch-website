@@ -32,7 +32,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ theme, className = '' 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = isLight ? 1.35 : 1.2;
+    renderer.toneMappingExposure = isLight ? 1.08 : 1.2;
 
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
@@ -53,20 +53,25 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ theme, className = '' 
 
       const r = Math.random();
       if (isLight) {
-        if (r > 0.6) {
-          // Vibrant green/lime
-          starColors[i * 3] = 0.35;
-          starColors[i * 3 + 1] = 0.65;
-          starColors[i * 3 + 2] = 0.15;
-        } else if (r > 0.3) {
-          // Deep Indigo
-          starColors[i * 3] = 0.3;
-          starColors[i * 3 + 1] = 0.4;
-          starColors[i * 3 + 2] = 0.85;
+        if (r > 0.5) {
+          // Deep Midnight Charcoal & Slate
+          starColors[i * 3] = 0.12;
+          starColors[i * 3 + 1] = 0.16;
+          starColors[i * 3 + 2] = 0.24;
+        } else if (r > 0.25) {
+          // Deep Sapphire / Royal Blue
+          starColors[i * 3] = 0.18;
+          starColors[i * 3 + 1] = 0.38;
+          starColors[i * 3 + 2] = 0.82;
+        } else if (r > 0.1) {
+          // Deep Emerald / Forest Green
+          starColors[i * 3] = 0.08;
+          starColors[i * 3 + 1] = 0.5;
+          starColors[i * 3 + 2] = 0.25;
         } else {
-          // Slate dust
-          starColors[i * 3] = 0.6;
-          starColors[i * 3 + 1] = 0.65;
+          // Vivid Violet
+          starColors[i * 3] = 0.45;
+          starColors[i * 3 + 1] = 0.2;
           starColors[i * 3 + 2] = 0.75;
         }
       } else {
@@ -94,10 +99,10 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ theme, className = '' 
     starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: isLight ? 0.05 : 0.045,
+      size: isLight ? 0.052 : 0.045,
       vertexColors: true,
       transparent: true,
-      opacity: isLight ? 0.65 : 0.75,
+      opacity: isLight ? 0.75 : 0.75,
       blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending
     });
 
@@ -116,22 +121,24 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ theme, className = '' 
     const icosaGeo = new THREE.IcosahedronGeometry(2.35, 2);
     const wireframeGeo = new THREE.WireframeGeometry(icosaGeo);
     const wireMat = new THREE.LineBasicMaterial({
-      color: isLight ? 0x4f46e5 : 0xC6FF4D,
+      color: isLight ? 0x2563eb : 0xC6FF4D,
       transparent: true,
-      opacity: isLight ? 0.85 : 0.8,
+      opacity: isLight ? 0.8 : 0.8,
       blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending
     });
     const wireLines = new THREE.LineSegments(wireframeGeo, wireMat);
     matrixGroup.add(wireLines);
 
-    // 3b. Semi-reflective Translucent Facet Mesh
+    // 3b. Semi-reflective Translucent Facet Mesh (Diamond Glass in light mode)
     const facetMat = new THREE.MeshPhysicalMaterial({
-      color: isLight ? 0x94a3b8 : 0x0a101f,
-      metalness: isLight ? 0.25 : 0.9,
-      roughness: 0.2,
-      transmission: isLight ? 0.85 : 0.6,
+      color: isLight ? 0xffffff : 0x0a101f,
+      metalness: isLight ? 0.02 : 0.9,
+      roughness: isLight ? 0.04 : 0.2,
+      transmission: isLight ? 0.96 : 0.6,
       transparent: true,
-      opacity: isLight ? 0.35 : 0.4
+      opacity: isLight ? 0.1 : 0.4,
+      reflectivity: 1.0,
+      ior: 1.5
     });
     const facetMesh = new THREE.Mesh(icosaGeo, facetMat);
     matrixGroup.add(facetMesh);
@@ -168,35 +175,47 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ theme, className = '' 
       nIdx++;
     });
 
-    // 3d. Inner Dark Metallic Core
-    const innerSphereGeo = new THREE.SphereGeometry(1.6, 32, 32);
-    const innerSphereMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      metalness: 0.95,
-      roughness: 0.2,
-      emissive: isLight ? 0x1e293b : 0x0d1527,
-      emissiveIntensity: 0.45
-    });
+    // 3d. Inner Core Sphere: High-End Iridescent Pearl in Light Mode, Obsidian Chrome in Dark Mode
+    const innerSphereGeo = new THREE.SphereGeometry(1.6, 48, 48);
+    const innerSphereMat = isLight
+      ? new THREE.MeshPhysicalMaterial({
+          color: 0xfcfdfd,
+          metalness: 0.15,
+          roughness: 0.08,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.04,
+          reflectivity: 1.0,
+          emissive: 0xf1f5f9,
+          emissiveIntensity: 0.25,
+          ior: 1.55
+        })
+      : new THREE.MeshStandardMaterial({
+          color: 0x0f172a,
+          metalness: 0.95,
+          roughness: 0.2,
+          emissive: 0x0d1527,
+          emissiveIntensity: 0.45
+        });
     const innerSphere = new THREE.Mesh(innerSphereGeo, innerSphereMat);
     matrixGroup.add(innerSphere);
 
     // 3e. Central Pulsing Octahedron
     const coreGeo = new THREE.OctahedronGeometry(0.85, 0);
     const coreMat = new THREE.MeshStandardMaterial({
-      color: isLight ? 0x16a34a : 0xC6FF4D,
-      emissive: isLight ? 0x16a34a : 0xC6FF4D,
-      emissiveIntensity: isLight ? 1.5 : 1.8,
+      color: isLight ? 0x2563eb : 0xC6FF4D,
+      emissive: isLight ? 0x1d4ed8 : 0xC6FF4D,
+      emissiveIntensity: isLight ? 1.3 : 1.8,
       wireframe: true
     });
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
     matrixGroup.add(coreMesh);
 
     // 3f. Dual Orbital Quantum Torus Rings
-    const ring1Geo = new THREE.TorusGeometry(3.0, 0.018, 16, 120);
+    const ring1Geo = new THREE.TorusGeometry(3.0, 0.02, 16, 120);
     const ring1Mat = new THREE.MeshStandardMaterial({
-      color: isLight ? 0x6366f1 : 0x8B5CF6,
-      emissive: isLight ? 0x4f46e5 : 0x8B5CF6,
-      emissiveIntensity: 1.5,
+      color: isLight ? 0x7c3aed : 0x8B5CF6,
+      emissive: isLight ? 0x6d28d9 : 0x8B5CF6,
+      emissiveIntensity: isLight ? 1.2 : 1.5,
       roughness: 0.2
     });
     const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
@@ -204,11 +223,11 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ theme, className = '' 
     ring1.rotation.y = Math.PI / 5;
     matrixGroup.add(ring1);
 
-    const ring2Geo = new THREE.TorusGeometry(3.3, 0.015, 16, 120);
+    const ring2Geo = new THREE.TorusGeometry(3.3, 0.018, 16, 120);
     const ring2Mat = new THREE.MeshStandardMaterial({
       color: isLight ? 0x0284c7 : 0x38bdf8,
       emissive: isLight ? 0x0369a1 : 0x0284c7,
-      emissiveIntensity: 1.6,
+      emissiveIntensity: isLight ? 1.2 : 1.6,
       roughness: 0.2
     });
     const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);

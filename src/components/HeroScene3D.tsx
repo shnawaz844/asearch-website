@@ -31,7 +31,7 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = isLight ? 1.4 : 1.25;
+    renderer.toneMappingExposure = isLight ? 1.08 : 1.25;
 
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
@@ -49,20 +49,25 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
 
       const rand = Math.random();
       if (isLight) {
-        if (rand > 0.75) {
-          // Vibrant Lime accent
-          starColors[i * 3] = 0.4;
-          starColors[i * 3 + 1] = 0.65;
-          starColors[i * 3 + 2] = 0.1;
-        } else if (rand > 0.45) {
-          // Deep Cyan/Indigo
-          starColors[i * 3] = 0.25;
-          starColors[i * 3 + 1] = 0.45;
-          starColors[i * 3 + 2] = 0.85;
+        if (rand > 0.5) {
+          // Deep Midnight Charcoal & Slate (crisp high-contrast dots equivalent to white stars in dark mode)
+          starColors[i * 3] = 0.12;
+          starColors[i * 3 + 1] = 0.16;
+          starColors[i * 3 + 2] = 0.24;
+        } else if (rand > 0.25) {
+          // Deep Sapphire / Royal Blue stars
+          starColors[i * 3] = 0.18;
+          starColors[i * 3 + 1] = 0.38;
+          starColors[i * 3 + 2] = 0.82;
+        } else if (rand > 0.1) {
+          // Deep Emerald / Forest Green stars
+          starColors[i * 3] = 0.08;
+          starColors[i * 3 + 1] = 0.5;
+          starColors[i * 3 + 2] = 0.25;
         } else {
-          // Soft slate dust
-          starColors[i * 3] = 0.6;
-          starColors[i * 3 + 1] = 0.65;
+          // Vivid Violet stars
+          starColors[i * 3] = 0.45;
+          starColors[i * 3 + 1] = 0.2;
           starColors[i * 3 + 2] = 0.75;
         }
       } else {
@@ -95,10 +100,10 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: isLight ? 0.055 : 0.05,
+      size: isLight ? 0.052 : 0.05,
       vertexColors: true,
       transparent: true,
-      opacity: isLight ? 0.65 : 0.85,
+      opacity: isLight ? 0.75 : 0.85,
       blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending
     });
 
@@ -154,17 +159,17 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
 
     // Distinct palette for particles matching theme
     const darkColors = [
-      { color: '#C6FF4D', glow: 'rgba(198, 255, 77, 0.8)' }, // Neon Lime
-      { color: '#38BDF8', glow: 'rgba(56, 189, 248, 0.8)' },  // Electric Cyan
-      { color: '#A78BFA', glow: 'rgba(167, 139, 250, 0.8)' }, // Electric Violet
-      { color: '#F8FAFC', glow: 'rgba(248, 250, 252, 0.6)' }  // Diamond White
+      { color: '#C6FF4D', glow: 'rgba(198, 255, 77, 0.8)', bg: 'rgba(11, 15, 25, 0.65)', text: '#f8fafc' }, // Neon Lime
+      { color: '#38BDF8', glow: 'rgba(56, 189, 248, 0.8)', bg: 'rgba(11, 15, 25, 0.65)', text: '#f8fafc' },  // Electric Cyan
+      { color: '#A78BFA', glow: 'rgba(167, 139, 250, 0.8)', bg: 'rgba(11, 15, 25, 0.65)', text: '#f8fafc' }, // Electric Violet
+      { color: '#F8FAFC', glow: 'rgba(248, 250, 252, 0.6)', bg: 'rgba(11, 15, 25, 0.65)', text: '#f8fafc' }  // Diamond White
     ];
 
     const lightColors = [
-      { color: '#15803D', glow: 'rgba(21, 128, 61, 0.7)' },  // Emerald
-      { color: '#4338CA', glow: 'rgba(67, 56, 202, 0.7)' },  // Indigo
-      { color: '#0284C7', glow: 'rgba(2, 132, 199, 0.7)' },  // Cyan
-      { color: '#334155', glow: 'rgba(51, 65, 85, 0.5)' }    // Slate
+      { color: '#16a34a', glow: 'rgba(22, 163, 74, 0.25)', bg: 'rgba(255, 255, 255, 0.96)', text: '#090d16' },  // Vibrant Emerald
+      { color: '#2563eb', glow: 'rgba(37, 99, 235, 0.25)', bg: 'rgba(255, 255, 255, 0.96)', text: '#090d16' },  // Royal Blue
+      { color: '#7c3aed', glow: 'rgba(124, 58, 237, 0.25)', bg: 'rgba(255, 255, 255, 0.96)', text: '#090d16' }, // Vivid Violet
+      { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.25)', bg: 'rgba(255, 255, 255, 0.96)', text: '#090d16' }   // Cyan
     ];
 
     const palette = isLight ? lightColors : darkColors;
@@ -186,29 +191,47 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
       const w = canvas.width - 16;
       const h = canvas.height - 16;
 
+      ctx.save();
       ctx.beginPath();
       ctx.roundRect(x, y, w, h, r);
-      ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.75)' : 'rgba(11, 15, 25, 0.65)';
+      ctx.fillStyle = colPair.bg;
+      if (isLight) {
+        ctx.shadowColor = 'rgba(15, 23, 42, 0.14)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+      } else {
+        ctx.shadowColor = colPair.glow;
+        ctx.shadowBlur = item.accent ? 14 : 7;
+      }
       ctx.fill();
-      ctx.strokeStyle = colPair.color;
-      ctx.lineWidth = item.accent ? 2 : 1.2;
-      ctx.shadowColor = colPair.glow;
-      ctx.shadowBlur = item.accent ? 14 : 7;
-      ctx.stroke();
 
-      // Glowing particle node
+      // Border outline
+      ctx.strokeStyle = colPair.color;
+      ctx.lineWidth = isLight ? (item.accent ? 1.8 : 1.3) : (item.accent ? 2 : 1.2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Glowing / solid particle node dot
       ctx.beginPath();
       ctx.arc(32, 38, item.accent ? 5.5 : 4, 0, Math.PI * 2);
       ctx.fillStyle = colPair.color;
-      ctx.shadowColor = colPair.glow;
-      ctx.shadowBlur = 12;
+      if (!isLight) {
+        ctx.shadowColor = colPair.glow;
+        ctx.shadowBlur = 12;
+      }
       ctx.fill();
 
-      // Digital marketing text
-      ctx.font = '700 23px "Space Grotesk", "JetBrains Mono", monospace, sans-serif';
-      ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
-      ctx.shadowColor = colPair.glow;
-      ctx.shadowBlur = item.accent ? 8 : 4;
+      // Digital marketing text - crisp and high-contrast in light mode
+      ctx.font = '800 23px "Space Grotesk", "JetBrains Mono", system-ui, sans-serif';
+      ctx.fillStyle = colPair.text;
+      if (!isLight) {
+        ctx.shadowColor = colPair.glow;
+        ctx.shadowBlur = item.accent ? 8 : 4;
+      } else {
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+      }
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
       ctx.fillText(item.text, 50, 38);
@@ -220,8 +243,8 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
       const material = new THREE.SpriteMaterial({
         map: texture,
         transparent: true,
-        opacity: isLight ? 0.8 : 0.85,
-        blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending,
+        opacity: isLight ? 0.96 : 0.85,
+        blending: THREE.NormalBlending,
         depthWrite: false
       });
 
@@ -232,7 +255,6 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
       sprite.scale.set(baseScale * 1.5, baseScale * 0.36, 1);
 
       // Distribute particle text across hero volume
-      // Left side, right side around 3D sculpture, and atmospheric depth
       const angle = (index / marketingTerms.length) * Math.PI * 2;
       const radius = 3.5 + Math.random() * 5.5;
       const posX = (Math.cos(angle) * radius) + (Math.random() - 0.5) * 4;
@@ -268,23 +290,24 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     const icosaGeo = new THREE.IcosahedronGeometry(2.1, 2);
     const wireframeGeo = new THREE.WireframeGeometry(icosaGeo);
     const lineMat = new THREE.LineBasicMaterial({
-      color: isLight ? 0x4f46e5 : 0xC6FF4D,
+      color: isLight ? 0x2563eb : 0xC6FF4D,
       transparent: true,
-      opacity: isLight ? 0.85 : 0.75,
+      opacity: isLight ? 0.8 : 0.75,
       blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending
     });
     const icosaLines = new THREE.LineSegments(wireframeGeo, lineMat);
     matrixRoot.add(icosaLines);
 
-    // 3b. Outer Translucent Facets for Specular Reflections
+    // 3b. Outer Translucent Facets for Specular Reflections (Diamond Glass in light mode)
     const facetMat = new THREE.MeshPhysicalMaterial({
-      color: isLight ? 0x94a3b8 : 0x070b14,
-      metalness: isLight ? 0.2 : 0.85,
-      roughness: 0.2,
-      transmission: isLight ? 0.8 : 0.65,
+      color: isLight ? 0xffffff : 0x070b14,
+      metalness: isLight ? 0.02 : 0.85,
+      roughness: isLight ? 0.04 : 0.2,
+      transmission: isLight ? 0.96 : 0.65,
       transparent: true,
-      opacity: isLight ? 0.35 : 0.45,
-      reflectivity: 0.9
+      opacity: isLight ? 0.1 : 0.45,
+      reflectivity: 1.0,
+      ior: 1.5
     });
     const icosaMesh = new THREE.Mesh(icosaGeo, facetMat);
     matrixRoot.add(icosaMesh);
@@ -305,12 +328,12 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     const nodeMatLime = new THREE.MeshStandardMaterial({
       color: isLight ? 0x16a34a : 0xC6FF4D,
       emissive: isLight ? 0x15803d : 0xC6FF4D,
-      emissiveIntensity: isLight ? 1.6 : 2.2,
+      emissiveIntensity: isLight ? 1.4 : 2.2,
       roughness: 0.1
     });
     const nodeMatCyan = new THREE.MeshStandardMaterial({
-      color: isLight ? 0x4338ca : 0x38bdf8,
-      emissive: isLight ? 0x3730a3 : 0x0284c7,
+      color: isLight ? 0x2563eb : 0x38bdf8,
+      emissive: isLight ? 0x1d4ed8 : 0x0284c7,
       emissiveIntensity: isLight ? 1.4 : 2.0,
       roughness: 0.1
     });
@@ -323,35 +346,47 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
       nodeIdx++;
     });
 
-    // 3d. Dark Obsidian Chrome Inner Sphere
-    const innerSphereGeo = new THREE.SphereGeometry(1.4, 32, 32);
-    const innerSphereMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      metalness: 0.95,
-      roughness: 0.15,
-      emissive: isLight ? 0x1e293b : 0x0d1b2a,
-      emissiveIntensity: 0.4
-    });
+    // 3d. Inner Core Sphere: High-End Iridescent Pearl in Light Mode, Obsidian Chrome in Dark Mode
+    const innerSphereGeo = new THREE.SphereGeometry(1.4, 48, 48);
+    const innerSphereMat = isLight
+      ? new THREE.MeshPhysicalMaterial({
+          color: 0xfcfdfd,
+          metalness: 0.15,
+          roughness: 0.08,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.04,
+          reflectivity: 1.0,
+          emissive: 0xf1f5f9,
+          emissiveIntensity: 0.25,
+          ior: 1.55
+        })
+      : new THREE.MeshStandardMaterial({
+          color: 0x0f172a,
+          metalness: 0.95,
+          roughness: 0.15,
+          emissive: 0x0d1b2a,
+          emissiveIntensity: 0.4
+        });
     const innerSphere = new THREE.Mesh(innerSphereGeo, innerSphereMat);
     matrixRoot.add(innerSphere);
 
     // 3e. Central Glowing Quantum Octahedron
     const coreGeo = new THREE.OctahedronGeometry(0.7, 0);
     const coreMat = new THREE.MeshStandardMaterial({
-      color: isLight ? 0x16a34a : 0xC6FF4D,
-      emissive: isLight ? 0x16a34a : 0xC6FF4D,
-      emissiveIntensity: isLight ? 1.5 : 1.8,
+      color: isLight ? 0x2563eb : 0xC6FF4D,
+      emissive: isLight ? 0x1d4ed8 : 0xC6FF4D,
+      emissiveIntensity: isLight ? 1.3 : 1.8,
       wireframe: true
     });
     const coreMesh = new THREE.Mesh(coreGeo, coreMat);
     matrixRoot.add(coreMesh);
 
     // 3f. Dual Quantum Gyro Rings
-    const ring1Geo = new THREE.TorusGeometry(2.65, 0.018, 16, 100);
+    const ring1Geo = new THREE.TorusGeometry(2.65, 0.02, 16, 100);
     const ring1Mat = new THREE.MeshStandardMaterial({
-      color: isLight ? 0x6366f1 : 0x8B5CF6,
-      emissive: isLight ? 0x4f46e5 : 0x8B5CF6,
-      emissiveIntensity: 1.5,
+      color: isLight ? 0x7c3aed : 0x8B5CF6,
+      emissive: isLight ? 0x6d28d9 : 0x8B5CF6,
+      emissiveIntensity: isLight ? 1.2 : 1.5,
       roughness: 0.2
     });
     const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
@@ -359,11 +394,11 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     ring1.rotation.y = Math.PI / 6;
     matrixRoot.add(ring1);
 
-    const ring2Geo = new THREE.TorusGeometry(2.9, 0.015, 16, 100);
+    const ring2Geo = new THREE.TorusGeometry(2.9, 0.018, 16, 100);
     const ring2Mat = new THREE.MeshStandardMaterial({
       color: isLight ? 0x0284c7 : 0x38bdf8,
       emissive: isLight ? 0x0369a1 : 0x0284c7,
-      emissiveIntensity: 1.6,
+      emissiveIntensity: isLight ? 1.2 : 1.6,
       roughness: 0.2
     });
     const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
@@ -372,19 +407,19 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     matrixRoot.add(ring2);
 
     // 4. Lights
-    const dirLight = new THREE.DirectionalLight(0xffffff, isLight ? 3.0 : 2.5);
+    const dirLight = new THREE.DirectionalLight(0xffffff, isLight ? 2.8 : 2.5);
     dirLight.position.set(6, 8, 6);
     scene.add(dirLight);
 
-    const cyanLight = new THREE.PointLight(isLight ? 0x0284c7 : 0x38bdf8, 3.5, 12);
+    const cyanLight = new THREE.PointLight(isLight ? 0x0284c7 : 0x38bdf8, isLight ? 2.6 : 3.5, 12);
     cyanLight.position.set(4, 2, 3);
     scene.add(cyanLight);
 
-    const limeLight = new THREE.PointLight(isLight ? 0x16a34a : 0xC6FF4D, 3.0, 12);
+    const limeLight = new THREE.PointLight(isLight ? 0x16a34a : 0xC6FF4D, isLight ? 2.4 : 3.0, 12);
     limeLight.position.set(-2, -3, 3);
     scene.add(limeLight);
 
-    const violetLight = new THREE.PointLight(0x8B5CF6, 2.5, 10);
+    const violetLight = new THREE.PointLight(0x8B5CF6, isLight ? 2.0 : 2.5, 10);
     violetLight.position.set(0, 4, -3);
     scene.add(violetLight);
 
