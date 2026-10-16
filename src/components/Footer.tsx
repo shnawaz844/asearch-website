@@ -26,12 +26,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenStrategyCall }) => {
 
           <div className="shrink-0">
             <MagneticButton
-              onClick={onOpenStrategyCall}
+              href="mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online"
+              target="_blank"
+              rel="noopener noreferrer"
               variant="primary"
-              className="text-xs uppercase tracking-wider py-3.5 px-7 font-extrabold"
+              className="text-xs uppercase tracking-wider py-3.5 px-7 font-extrabold cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" />
-              <span>Book Strategy Session</span>
+              <span>Talk to Us</span>
               <ArrowUpRight className="w-4 h-4" />
             </MagneticButton>
           </div>
@@ -47,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenStrategyCall }) => {
               <img
                 src="https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"
                 alt="ASearch Online"
-                className="h-9 sm:h-10 w-auto max-w-[200px] object-contain transition-transform group-hover:scale-105"
+                className="h-11 sm:h-12 w-auto max-w-[240px] object-contain transition-transform group-hover:scale-105"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const fallback = document.getElementById('footer-brand-fallback');
@@ -81,19 +83,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenStrategyCall }) => {
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-lime-600 dark:text-[#C6FF4D] shrink-0" />
                 <a href="tel:+919573194350" className="hover:underline text-lime-600 dark:text-[#C6FF4D]">
-                  +91-9573194350
-                </a>
-                <span>·</span>
-                <a href="tel:+911140513772" className="hover:underline text-lime-600 dark:text-[#C6FF4D]">
-                  +91-11-40513772
+                  +91-9217571022
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-lime-600 dark:text-[#C6FF4D] shrink-0" />
-                <a href="mailto:info@asearchonline.com" className="hover:underline text-lime-600 dark:text-[#C6FF4D]">
-                  info@asearchonline.com
-                </a>
-                <span>·</span>
                 <a href="mailto:akram@asearchonline.com" className="hover:underline text-lime-600 dark:text-[#C6FF4D]">
                   akram@asearchonline.com
                 </a>

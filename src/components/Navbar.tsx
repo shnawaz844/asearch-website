@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 import { ALL_SERVICES } from '../data/siteData';
 
 import { useCMS } from '../context/CMSContext';
-import { Lock, Edit3 } from 'lucide-react';
+import { Lock, Edit3, Eye } from 'lucide-react';
 
 interface NavbarProps {
   theme: ThemeMode;
@@ -15,12 +15,21 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenContact }) => {
-  const { siteContent, isAuthenticated, setIsLoginModalOpen, setIsEditorDrawerOpen } = useCMS();
+  const { siteContent, isAuthenticated, isEditMode, setIsEditMode, setIsLoginModalOpen, setIsEditorDrawerOpen } = useCMS();
   const [scrolled, setScrolled] = useState(false);
+  const [logoShrunk, setLogoShrunk] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [mobileServicesExpanded, setMobileServicesExpanded] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // On site load: show bigger logo with glowing aura, then smoothly decrease to resting size
+    const timer = setTimeout(() => {
+      setLogoShrunk(true);
+    }, 550);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,29 +79,38 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             : 'bg-white/70 dark:bg-black/30 backdrop-blur-md border border-slate-200/70 dark:border-white/5'
         )}
       >
-        {/* Brand Logo (Zone 1) */}
-        <a href="#" className="flex items-center gap-2 group whitespace-nowrap shrink-0" aria-label="ASearch Online Home">
-          <img
-            src={siteContent.branding.logoUrl}
-            alt="ASearch Online"
-            className="h-7 sm:h-9 w-auto max-w-[145px] sm:max-w-[210px] object-contain transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              const fallback = document.getElementById('navbar-brand-fallback');
-              if (fallback) fallback.classList.remove('hidden');
-            }}
-          />
-          <div id="navbar-brand-fallback" className="hidden items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#C6FF4D] text-[#07080B] flex items-center justify-center font-extrabold text-base shadow-lg shadow-[#C6FF4D]/20">
-              A
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-[#F5F7FA]">
-                ASEARCH
-              </span>
-              <span className="text-xs font-mono font-bold text-lime-600 dark:text-[#C6FF4D] tracking-widest">
-                // ONLINE
-              </span>
+        {/* Brand Logo (Zone 1) - 20% bigger resting size + load scale-down animation */}
+        <a href="#" className="flex items-center gap-2 group whitespace-nowrap shrink-0 overflow-visible" aria-label="ASearch Online Home">
+          <div
+            className={cn(
+              "flex items-center gap-2 origin-left transition-all duration-1000 ease-out",
+              logoShrunk
+                ? "scale-100 filter-none"
+                : "scale-[1.35] sm:scale-[1.45] drop-shadow-[0_0_22px_rgba(198,255,77,0.6)]"
+            )}
+          >
+            <img
+              src={siteContent.branding.logoUrl || "https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"}
+              alt="ASearch Online"
+              className="h-9 sm:h-11 w-auto max-w-[180px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const fallback = document.getElementById('navbar-brand-fallback');
+                if (fallback) fallback.classList.remove('hidden');
+              }}
+            />
+            <div id="navbar-brand-fallback" className="hidden items-center gap-2">
+              <div className="w-10 h-10 rounded-lg bg-[#C6FF4D] text-[#07080B] flex items-center justify-center font-extrabold text-lg shadow-lg shadow-[#C6FF4D]/20">
+                A
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-[#F5F7FA]">
+                  ASEARCH
+                </span>
+                <span className="text-xs font-mono font-bold text-lime-600 dark:text-[#C6FF4D] tracking-widest">
+                  // ONLINE
+                </span>
+              </div>
             </div>
           </div>
         </a>
@@ -256,33 +274,75 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             )}
           </button>
 
-          {/* Client Portal / CMS Trigger */}
+          {/* Client Portal / Mode Switcher (Edit Mode vs Website Mode) */}
           <button
             onClick={() => {
               if (isAuthenticated) {
-                setIsEditorDrawerOpen(true);
+                if (isEditMode) {
+                  // Switch back to clean Website Mode
+                  setIsEditMode(false);
+                  setIsEditorDrawerOpen(false);
+                } else {
+                  // Switch to Edit Mode & open drawer
+                  setIsEditMode(true);
+                  setIsEditorDrawerOpen(true);
+                }
               } else {
                 setIsLoginModalOpen(true);
               }
             }}
-            className={`p-2.5 rounded-xl transition-all cursor-pointer border ${
+            className={`p-2 sm:px-3 sm:py-2 rounded-xl transition-all cursor-pointer border flex items-center gap-1.5 ${
               isAuthenticated
-                ? 'bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border-lime-500/40 hover:bg-lime-500/30'
+                ? isEditMode
+                  ? 'bg-lime-500/20 text-lime-700 dark:text-[#C6FF4D] border-lime-500/40 hover:bg-lime-500/30 shadow-xs'
+                  : 'bg-slate-100 dark:bg-[#11151D]/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:text-slate-950 dark:hover:text-white'
                 : 'text-slate-600 dark:text-[#9CA3AF] hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#11151D]/80 border-slate-200 dark:border-white/10'
             }`}
-            title={isAuthenticated ? 'Open CMS Live Editor' : 'Client Portal Login'}
-            aria-label="Client Portal Login"
+            title={
+              isAuthenticated
+                ? isEditMode
+                  ? 'Switch to Website Mode (Clean Preview)'
+                  : 'Switch to Edit Mode'
+                : 'Client Portal Login'
+            }
+            aria-label={
+              isAuthenticated
+                ? isEditMode
+                  ? 'Switch to Website Mode'
+                  : 'Switch to Edit Mode'
+                : 'Client Portal Login'
+            }
           >
-            {isAuthenticated ? <Edit3 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+            {isAuthenticated ? (
+              isEditMode ? (
+                <>
+                  <Eye className="w-4 h-4 text-lime-600 dark:text-[#C6FF4D]" />
+                  <span className="hidden md:inline text-xs font-mono font-bold text-lime-600 dark:text-[#C6FF4D]">
+                    Edit Mode
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Edit3 className="w-4 h-4" />
+                  <span className="hidden md:inline text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                    Website Mode
+                  </span>
+                </>
+              )
+            ) : (
+              <Lock className="w-4 h-4" />
+            )}
           </button>
 
-          {/* Master Prompt CTA: "Let's Talk" */}
+          {/* Master Prompt CTA: "Talk to Us" - opens email client in new tab/window */}
           <MagneticButton
-            onClick={() => onOpenContact()}
+            href="mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online"
+            target="_blank"
+            rel="noopener noreferrer"
             variant="primary"
-            className="hidden sm:inline-flex text-xs uppercase tracking-wider py-2.5 px-5 font-extrabold"
+            className="hidden sm:inline-flex text-xs uppercase tracking-wider py-2.5 px-5 font-extrabold cursor-pointer"
           >
-            <span>Let's Talk</span>
+            <span>Talk to Us</span>
             <ArrowUpRight className="w-4 h-4" />
           </MagneticButton>
 
@@ -371,14 +431,14 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
               Google Certified Partner • 14+ Years in Business
             </div>
             <MagneticButton
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenContact();
-              }}
+              href="mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
               variant="primary"
               className="w-full text-xs uppercase tracking-wider py-3"
             >
-              <span>Start a Project</span>
+              <span>Talk to Us</span>
               <ArrowUpRight className="w-4 h-4" />
             </MagneticButton>
           </div>

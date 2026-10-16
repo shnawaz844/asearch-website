@@ -5,21 +5,27 @@ interface MagneticButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   children: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'outline';
   className?: string;
+  href?: string;
+  target?: string;
+  rel?: string;
 }
 
 export const MagneticButton: React.FC<MagneticButtonProps> = ({
   children,
   variant = 'primary',
   className,
+  href,
+  target,
+  rel,
   ...props
 }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const elementRef = useRef<any>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!buttonRef.current) return;
+  const handleMouseMove = (e: React.MouseEvent<any>) => {
+    if (!elementRef.current) return;
     const { clientX, clientY } = e;
-    const { left, top, width, height } = buttonRef.current.getBoundingClientRect();
+    const { left, top, width, height } = elementRef.current.getBoundingClientRect();
     const x = (clientX - (left + width / 2)) * 0.28;
     const y = (clientY - (top + height / 2)) * 0.28;
     setPosition({ x, y });
@@ -37,9 +43,30 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
     outline: 'bg-transparent text-slate-800 dark:text-[#F5F7FA] border border-slate-300 dark:border-[#C6FF4D]/40 hover:border-lime-500 dark:hover:border-[#C6FF4D] hover:bg-lime-500/10 dark:hover:bg-[#C6FF4D]/10 text-xs sm:text-sm px-4 py-2'
   };
 
+  if (href) {
+    return (
+      <a
+        ref={elementRef}
+        href={href}
+        target={target}
+        rel={rel}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          transition: position.x === 0 ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none'
+        }}
+        className={cn(baseStyles, variants[variant], className)}
+        {...(props as any)}
+      >
+        {children}
+      </a>
+    );
+  }
+
   return (
     <button
-      ref={buttonRef}
+      ref={elementRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{

@@ -290,6 +290,7 @@ interface CMSContextType {
   login: (email?: string, password?: string) => boolean;
   logout: () => void;
   isEditMode: boolean;
+  setIsEditMode: (mode: boolean) => void;
   toggleEditMode: () => void;
   siteContent: SiteContent;
   updateSection: <K extends keyof SiteContent>(section: K, data: SiteContent[K]) => void;
@@ -387,15 +388,17 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [githubConfig]);
 
   const login = (email = '', password = ''): boolean => {
-    // Default password or demo credentials check
-    // Allows standard admin/client login or quick authorization
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
     const valid =
-      (email.toLowerCase().includes('admin') || email.toLowerCase().includes('asearch') || email.length === 0) &&
-      (password === 'asearch2026' || password === 'admin' || password === 'client123' || password.length === 0);
+      cleanEmail === 'akram@asearchonline.com' &&
+      cleanPassword === 'akSearch@123#';
 
     if (valid) {
       setIsAuthenticated(true);
       setIsEditMode(true);
+      setIsEditorDrawerOpen(true);
       return true;
     }
     return false;
@@ -410,7 +413,15 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const toggleEditMode = () => {
     if (isAuthenticated) {
-      setIsEditMode(prev => !prev);
+      setIsEditMode(prev => {
+        const next = !prev;
+        if (!next) {
+          setIsEditorDrawerOpen(false);
+        } else {
+          setIsEditorDrawerOpen(true);
+        }
+        return next;
+      });
     }
   };
 
@@ -500,6 +511,7 @@ export const CORPORATE_CONTACT = ${JSON.stringify(siteContent.contact, null, 2)}
         login,
         logout,
         isEditMode,
+        setIsEditMode,
         toggleEditMode,
         siteContent,
         updateSection,

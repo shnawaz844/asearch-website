@@ -5,8 +5,8 @@ import { MagneticButton } from '../ui/MagneticButton';
 
 export const ClientLoginModal: React.FC = () => {
   const { isLoginModalOpen, setIsLoginModalOpen, login, isAuthenticated } = useCMS();
-  const [email, setEmail] = useState('admin@asearchonline.com');
-  const [password, setPassword] = useState('asearch2026');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   if (!isLoginModalOpen) return null;
@@ -18,13 +18,8 @@ export const ClientLoginModal: React.FC = () => {
     if (success) {
       setIsLoginModalOpen(false);
     } else {
-      setError('Invalid credentials. Use admin@asearchonline.com / asearch2026 or click Quick Demo Sign-in.');
+      setError('Invalid credentials. Please verify your email and password.');
     }
-  };
-
-  const handleQuickLogin = () => {
-    login('admin@asearchonline.com', 'asearch2026');
-    setIsLoginModalOpen(false);
   };
 
   return (
@@ -94,23 +89,15 @@ export const ClientLoginModal: React.FC = () => {
             <div>• Direct GitHub commit & automatic Vercel live deploy</div>
           </div>
 
-          <div className="pt-2 space-y-2">
+          <div className="pt-2">
             <MagneticButton
               type="submit"
               variant="primary"
-              className="w-full py-3 text-xs uppercase tracking-wider font-extrabold"
+              className="w-full py-3 text-xs uppercase tracking-wider font-extrabold cursor-pointer"
             >
               <span>Authenticate & Enter CMS</span>
               <ArrowRight className="w-4 h-4" />
             </MagneticButton>
-
-            <button
-              type="button"
-              onClick={handleQuickLogin}
-              className="w-full py-2.5 text-xs font-semibold text-slate-600 dark:text-[#9CA3AF] hover:text-slate-950 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
-            >
-              1-Click Instant Demo Login
-            </button>
           </div>
         </form>
       </div>

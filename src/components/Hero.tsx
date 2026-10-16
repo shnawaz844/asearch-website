@@ -108,7 +108,7 @@ export const Hero: React.FC<HeroProps> = ({ theme, onOpenContact, onExploreWork 
         </div>
       </div>
 
-      {/* Subtle Scroll Indicator */}
+      {/* Subtle Scroll Indicator
       <div className="pt-4 sm:pt-6 pb-2 flex justify-center items-center relative z-10">
         <a
           href="#services"
@@ -117,7 +117,7 @@ export const Hero: React.FC<HeroProps> = ({ theme, onOpenContact, onExploreWork 
           <span>Scroll to Explore</span>
           <ChevronDown className="w-4 h-4 animate-bounce text-lime-600 dark:text-[#C6FF4D]" />
         </a>
-      </div>
+      </div> */}
     </section>
   );
 };

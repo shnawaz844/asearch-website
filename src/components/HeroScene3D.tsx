@@ -105,6 +105,156 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
     const starPoints = new THREE.Points(starGeo, starMat);
     scene.add(starPoints);
 
+    // 2b. 3D Floating Particle-Like Text (Digital Marketing Domain)
+    const marketingTerms = [
+      { text: 'SEO', accent: true },
+      { text: 'MARKETING', accent: false },
+      { text: 'BRANDING', accent: true },
+      { text: 'AI-SEO', accent: true },
+      { text: 'PPC', accent: false },
+      { text: 'ROAS 3.8x', accent: true },
+      { text: 'GROWTH', accent: true },
+      { text: 'ANALYTICS', accent: false },
+      { text: 'CONTENT', accent: false },
+      { text: 'CONVERSION', accent: true },
+      { text: 'CREATIVE', accent: false },
+      { text: 'SEARCHGPT', accent: true },
+      { text: 'AUTOMATION', accent: false },
+      { text: 'KEYWORDS', accent: false },
+      { text: 'LEADS', accent: true },
+      { text: 'STRATEGY', accent: false },
+      { text: 'RANKINGS', accent: true },
+      { text: 'PERFORMANCE', accent: false },
+      { text: 'GOOGLE ADS', accent: true },
+      { text: 'ECOSYSTEM', accent: false },
+      { text: 'DATA', accent: false },
+      { text: 'TRAFFIC', accent: true },
+      { text: 'UX / UI', accent: false },
+      { text: 'TARGETING', accent: false },
+      { text: 'MEDIA', accent: false },
+      { text: 'REVENUE', accent: true }
+    ];
+
+    const textParticlesGroup = new THREE.Group();
+    scene.add(textParticlesGroup);
+
+    interface TextParticleItem {
+      sprite: THREE.Sprite;
+      texture: THREE.CanvasTexture;
+      material: THREE.SpriteMaterial;
+      baseX: number;
+      baseY: number;
+      baseZ: number;
+      speed: number;
+      floatOffset: number;
+      amp: number;
+    }
+
+    const textParticleItems: TextParticleItem[] = [];
+
+    // Distinct palette for particles matching theme
+    const darkColors = [
+      { color: '#C6FF4D', glow: 'rgba(198, 255, 77, 0.8)' }, // Neon Lime
+      { color: '#38BDF8', glow: 'rgba(56, 189, 248, 0.8)' },  // Electric Cyan
+      { color: '#A78BFA', glow: 'rgba(167, 139, 250, 0.8)' }, // Electric Violet
+      { color: '#F8FAFC', glow: 'rgba(248, 250, 252, 0.6)' }  // Diamond White
+    ];
+
+    const lightColors = [
+      { color: '#15803D', glow: 'rgba(21, 128, 61, 0.7)' },  // Emerald
+      { color: '#4338CA', glow: 'rgba(67, 56, 202, 0.7)' },  // Indigo
+      { color: '#0284C7', glow: 'rgba(2, 132, 199, 0.7)' },  // Cyan
+      { color: '#334155', glow: 'rgba(51, 65, 85, 0.5)' }    // Slate
+    ];
+
+    const palette = isLight ? lightColors : darkColors;
+
+    marketingTerms.forEach((item, index) => {
+      const colPair = palette[index % palette.length];
+      const canvas = document.createElement('canvas');
+      canvas.width = 320;
+      canvas.height = 76;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Micro particle pill capsule
+      const r = 18;
+      const x = 8;
+      const y = 8;
+      const w = canvas.width - 16;
+      const h = canvas.height - 16;
+
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, r);
+      ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.75)' : 'rgba(11, 15, 25, 0.65)';
+      ctx.fill();
+      ctx.strokeStyle = colPair.color;
+      ctx.lineWidth = item.accent ? 2 : 1.2;
+      ctx.shadowColor = colPair.glow;
+      ctx.shadowBlur = item.accent ? 14 : 7;
+      ctx.stroke();
+
+      // Glowing particle node
+      ctx.beginPath();
+      ctx.arc(32, 38, item.accent ? 5.5 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = colPair.color;
+      ctx.shadowColor = colPair.glow;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+
+      // Digital marketing text
+      ctx.font = '700 23px "Space Grotesk", "JetBrains Mono", monospace, sans-serif';
+      ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
+      ctx.shadowColor = colPair.glow;
+      ctx.shadowBlur = item.accent ? 8 : 4;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(item.text, 50, 38);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      texture.generateMipmaps = false;
+
+      const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: isLight ? 0.8 : 0.85,
+        blending: isLight ? THREE.NormalBlending : THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      const sprite = new THREE.Sprite(material);
+
+      // Small particle scale in 3D world units
+      const baseScale = item.accent ? 0.95 : 0.82;
+      sprite.scale.set(baseScale * 1.5, baseScale * 0.36, 1);
+
+      // Distribute particle text across hero volume
+      // Left side, right side around 3D sculpture, and atmospheric depth
+      const angle = (index / marketingTerms.length) * Math.PI * 2;
+      const radius = 3.5 + Math.random() * 5.5;
+      const posX = (Math.cos(angle) * radius) + (Math.random() - 0.5) * 4;
+      const posY = (Math.sin(angle) * (radius * 0.55)) + (Math.random() - 0.5) * 2;
+      const posZ = (Math.random() - 0.5) * 6 - 0.5;
+
+      sprite.position.set(posX, posY, posZ);
+      textParticlesGroup.add(sprite);
+
+      textParticleItems.push({
+        sprite,
+        texture,
+        material,
+        baseX: posX,
+        baseY: posY,
+        baseZ: posZ,
+        speed: 0.6 + Math.random() * 0.7,
+        floatOffset: Math.random() * Math.PI * 2,
+        amp: 0.18 + Math.random() * 0.22
+      });
+    });
+
     // 3. Edge Matrix 3D Sculpture Group
     const matrixRoot = new THREE.Group();
     const isDesktop = width >= 1024;
@@ -314,6 +464,18 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
       starPoints.rotation.y += 0.03 * delta;
       starPoints.rotation.x = curRotX * 0.15;
 
+      // 3D Digital Marketing text particles smooth floating and galactic drift
+      const elapsed = clock.getElapsedTime();
+      textParticleItems.forEach((tp) => {
+        tp.sprite.position.y = tp.baseY + Math.sin(elapsed * tp.speed + tp.floatOffset) * tp.amp;
+        tp.sprite.position.x = tp.baseX + Math.cos(elapsed * (tp.speed * 0.75) + tp.floatOffset) * (tp.amp * 0.5);
+        (tp.sprite.material as THREE.SpriteMaterial).opacity =
+          (isLight ? 0.72 : 0.82) + Math.sin(elapsed * 1.8 + tp.floatOffset) * 0.14;
+      });
+      textParticlesGroup.rotation.y += 0.022 * delta;
+      textParticlesGroup.rotation.x = curRotX * 0.22;
+      textParticlesGroup.rotation.z = curRotY * 0.15;
+
       // Matrix continuous rotation + manual drag + parallax
       matrixRoot.rotation.y += 0.28 * delta;
       matrixRoot.rotation.x = curRotX * 0.5 + manualRotX;
@@ -343,6 +505,13 @@ export const HeroScene3D: React.FC<HeroScene3DProps> = ({ theme }) => {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
       window.removeEventListener('resize', handleResize);
+
+      // Clean up text particles
+      textParticleItems.forEach((tp) => {
+        tp.texture.dispose();
+        tp.material.dispose();
+      });
+      scene.remove(textParticlesGroup);
 
       // Clean up geometries and materials
       starGeo.dispose();

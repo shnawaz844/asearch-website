@@ -19,7 +19,8 @@ import {
   HelpCircle,
   BarChart3,
   Building2,
-  Quote
+  Quote,
+  Eye
 } from 'lucide-react';
 import { MagneticButton } from '../ui/MagneticButton';
 
@@ -27,6 +28,7 @@ export const CMSEditorDrawer: React.FC = () => {
   const {
     isEditorDrawerOpen,
     setIsEditorDrawerOpen,
+    setIsEditMode,
     siteContent,
     updateSection,
     setIsGitHubModalOpen,
@@ -194,9 +196,20 @@ export const CMSEditorDrawer: React.FC = () => {
             <button
               onClick={() => {
                 setIsEditorDrawerOpen(false);
+                setIsEditMode(false);
+              }}
+              title="Close editor and view the live website"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-white/20 text-xs font-bold transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Website Mode</span>
+            </button>
+            <button
+              onClick={() => {
+                setIsEditorDrawerOpen(false);
                 setIsGitHubModalOpen(true);
               }}
-              className="px-3 py-1.5 rounded-xl bg-lime-500/15 text-lime-700 dark:text-[#C6FF4D] border border-lime-500/30 text-xs font-mono font-bold hover:bg-lime-500/25 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-lime-500/15 text-lime-700 dark:text-[#C6FF4D] border border-lime-500/30 text-xs font-mono font-bold hover:bg-lime-500/25 transition-all cursor-pointer whitespace-nowrap"
             >
               Push to GitHub & Vercel
             </button>
