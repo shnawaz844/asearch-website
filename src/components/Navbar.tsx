@@ -90,11 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
             )}
           >
             <img
-<<<<<<< Updated upstream
               src={siteContent.branding.logoUrl || "https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"}
-=======
-              src="https://asearchonline.com/wp-content/uploads/2026/02/asearchLOGO.png"
->>>>>>> Stashed changes
               alt="ASearch Online"
               className="h-9 sm:h-11 w-auto max-w-[180px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-105"
               onError={(e) => {
@@ -419,17 +415,10 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme, onOpenCont
               Google Certified Partner • 14+ Years in Business
             </div>
             <MagneticButton
-<<<<<<< Updated upstream
               href="mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-=======
-              onClick={() => {
-                setMobileMenuOpen(false);
-                window.location.href = 'mailto:akram@asearchonline.com?subject=Strategic%20Consultation%20Inquiry%20-%20ASearch%20Online';
-              }}
->>>>>>> Stashed changes
               variant="primary"
               className="w-full text-xs uppercase tracking-wider py-3"
             >
