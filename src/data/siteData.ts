@@ -18,7 +18,7 @@ export const HERO_DATA = {
   "availabilityText": "AVAILABLE FOR SELECT PROJECTS",
   "availabilityQuarter": "Q3 / Q4 2026",
   "description": "We combine strategy, creativity, performance marketing, and technology to turn ambitious businesses into category leaders.",
-  "primaryCtaText": "Let's Build Something Great",
+  "primaryCtaText": "Let's Build Something Great Together",
   "secondaryCtaText": "Explore Our Work",
   "badges": [
     "14+ Years Proven Growth",
