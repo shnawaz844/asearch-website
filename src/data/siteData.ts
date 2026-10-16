@@ -46,9 +46,9 @@ export const ALL_SERVICES: ServiceItem[] = [
   {
     id: 'ai-seo',
     number: '01',
-    title: 'AI-Driven SEO (AISEO)',
+    title: 'AI-Driven SEO & AEO (Answer Engine Optimization)',
     category: 'Digital Marketing & Strategy',
-    tagline: 'Semantic keyword modeling, LLM citation readiness, and autonomous search ranking.',
+    tagline: 'Semantic entity graphs, LLM citation retrieval (SearchGPT, Perplexity, Gemini), and organic dominance.',
     description: 'We engineer search dominance through predictive semantic entity modeling, programmatic JSON-LD architectures, and AI Overviews / SearchGPT citation optimization. We transform search traffic from vanity clicks into high-intent inbound pipeline.',
     capabilities: [
       'Semantic Keyword Strategy & Search Intent Modeling',
